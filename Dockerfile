@@ -43,5 +43,5 @@ ARG JAR_FILE=mysql-connector-java-5.1.46-bin.jar
 
 RUN mkdir -p /tmp/mysql_driver_extracted/ \
     && curl -L --silent ${MYSQL_DRIVER_URL} | tar -xz --strip-components=1 -C "/tmp/mysql_driver_extracted/" \
-    && chown -R ${RUN_USER}:${RUN_GROUP} /tmp/mysql_driver_extracted/ \
-	&& cp /tmp/mysql_driver_extracted/${JAR_FILE} ${CONFLUENCE_INSTALL_DIR}/confluence/WEB-INF/lib/
+	&& cp /tmp/mysql_driver_extracted/${JAR_FILE} ${CONFLUENCE_INSTALL_DIR}/confluence/WEB-INF/lib/ \
+	&& chown -R ${RUN_USER}:${RUN_GROUP} ${CONFLUENCE_INSTALL_DIR}/confluence/WEB-INF/lib/${JAR_FILE}
