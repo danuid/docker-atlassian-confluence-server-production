@@ -36,3 +36,12 @@ RUN mkdir -p                             ${CONFLUENCE_INSTALL_DIR} \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CONFLUENCE_INSTALL_DIR}/ \
     && sed -i -e 's/-Xms\([0-9]\+[kmg]\) -Xmx\([0-9]\+[kmg]\)/-Xms\${JVM_MINIMUM_MEMORY:=\1} -Xmx\${JVM_MAXIMUM_MEMORY:=\2} \${JVM_SUPPORT_RECOMMENDED_ARGS} -Dconfluence.home=\${CONFLUENCE_HOME}/g' ${CONFLUENCE_INSTALL_DIR}/bin/setenv.sh \
     && sed -i -e 's/port="8090"/port="8090" secure="${catalinaConnectorSecure}" scheme="${catalinaConnectorScheme}" proxyName="${catalinaConnectorProxyName}" proxyPort="${catalinaConnectorProxyPort}"/' ${CONFLUENCE_INSTALL_DIR}/conf/server.xml
+
+# also package database JDBC drivers
+ARG MYSQL_DRIVER_URL=https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java-5.1.46.tar.gz
+ARG JAR_FILE=mysql-connector-java-5.1.46-bin.jar
+
+RUN mkdir -p /tmp/mysql_driver_extracted/ \
+    && curl -L --silent ${MYSQL_DRIVER_URL} | tar -xz --strip-components=1 -C "/tmp/mysql_driver_extracted/" \
+    && chown -R ${RUN_USER}:${RUN_GROUP} /tmp/mysql_driver_extracted/ \
+	&& cp /tmp/mysql_driver_extracted/mysql-connector-java-5.1.46-bin.jar ${CONFLUENCE_INSTALL_DIR}/confluence/WEB-INF/lib/
